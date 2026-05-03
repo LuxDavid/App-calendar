@@ -32,7 +32,7 @@ export const CalendarModal= () => {
 
     const {isDateModalOpen, closeDateModal} = useUiStore();
 
-    const {activeEvent} = useCalendarStore();
+    const {activeEvent, startSavingEvent} = useCalendarStore();
     // const [isOpen, setIsOpen] = useState(true);
     const [formSubmitted, setFormSubmited] = useState(false);
 
@@ -82,7 +82,7 @@ export const CalendarModal= () => {
         })
     }
 
-    const onSubmit= (event: React.FormEvent<HTMLFormElement>)  => {
+    const onSubmit= async  (event: React.FormEvent<HTMLFormElement>)  => {
         event.preventDefault();
         setFormSubmited(true);
 
@@ -96,6 +96,9 @@ export const CalendarModal= () => {
         if(formValues.title.length <= 0) return;
 
         console.log(formValues);
+        await startSavingEvent(formValues);
+        closeDateModal();
+        setFormSubmited(false);
         
 
         //Todo
@@ -129,7 +132,7 @@ export const CalendarModal= () => {
 
     <div className="form-group mb-2">
         <label>Fecha y hora fin</label>
-        <DatePicker selected={formValues?.start} wrapperClassName="form-control" onChange={(event: any) => onDateChanged(event, 'start')}
+        <DatePicker selected={formValues?.end} wrapperClassName="form-control" onChange={(event: any) => onDateChanged(event, 'end')}
         minDate={formValues.start}
         showTimeSelect
         dateFormat="Pp"
